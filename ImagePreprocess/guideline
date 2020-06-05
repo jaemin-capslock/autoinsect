@@ -1,0 +1,164 @@
+# Guideline how to create your own Image Downloading & Processing tool.
+## Goals
+- [ ] Download the links of the images, as well as the names of the uploaders, in the form of csv file.
+- [ ] Create a separate directory inside of your computer to sort these images neatly.
+- [ ] Run my Python program that downloads such images *automatically* (ooh) into your folder.
+- [ ] Run my (again) Python program that sorts those images to "_train", "_validation", "_test".
+
+### 1. Log in and open [iNaturalist export tool](https://www.inaturalist.org/observations/export).
+
+### 2.
+![Taxon_choosing](https://i.imgur.com/CCn6qJQ.jpg)
+
+First, choose the option "Research grade". This ensures that our data is going to be (mostly) preprocessed and have relatively less noises.
+Ignore everything else, like what's been written on the red line, paste the name of the species that you want to retrieve images on.
+
+### 3.
+![iNaturalist_options](https://i.imgur.com/pziIWfN.jpg)
+
+Check how many images there exists. *Try* to keep the total number above 100, ideally around 250-300 - the more the images, the better.
+Next, disable every options below except for the image_url and user_login. **THIS STEP IS IMPORTANT**. This way we'll get the links for the images, as well as the names of the users, such that we won't have any copyright problems in the future.
+
+### 4.
+![iNaturalist_download](https://i.imgur.com/mPK1HRb.jpg)
+
+Double check if these are the images that you want to download. Press the Create Export button. They will automatically create an csv file, which contains the users' names and the url links to the images.
+This process might take a while.
+
+### 5. 
+You will be prompted to download a file shortly. Download the file. Since the file is located *inside* the compressed zip folder, you will have to extract (i.e. decompress).
+
+### 6. 
+Open the csv file inside. (Sounds familiar, right?) If you've downloaded this file correctly, you should see something like this:
+
+![csv_check](https://i.imgur.com/MynrYc5.jpg)
+
+*Congratulations!* Now we have a fresh csv file in our hands.
+- [x] Download the links of the images, as well as the names of the uploaders, in the form of csv file.
+Before further diving in, let's create a separate directory (engineer-language for set of folders) to store our data. Make sure that you've got enough disk space.
+
+### 7. 
+Open File Explorer. Go into the drive that you want to have your images stored in (preferably *not* in your C drive). 
+
+### 8. 
+Right click and create new folder. Name it whatever you want, but for the sake of legibility I'm going to name it as insect_dataset.
+
+![insect_dataset_folder_created](https://i.imgur.com/AKon7vU.jpg)
+
+For this case, the address of this directory is r"E:\insect_dataset". (Of course, the name of this directory depends on the location where you have created it, so improvise with your case accordingly!) You can easily access this address by right-clicking to the folder that you've made and copying the address appeared at the **Properties** section.
+
+Side note : Python is not friends with this "\". You **HAVE** to put the letter r, lowercase, in front of the directory, so that it's gonna interpret it correctly.
+
+- [x] Create a separate directory inside of your computer to sort these images neatly.
+### 9. 
+Now comes the fun part. Open the csv file that you've previously downloaded. Follow these steps :
+* Delete the first row of this file. (Right click and press delete) It is obvious which one is the url and which one is the login name.
+* Click the first cell of the user_login column. 
+* Either scroll, or pull the scroll bar to the very bottom of the page. **Shift + click** the **last** cell of the user_login column.
+* Press Ctrl+C.
+
+If you've followed the right steps, you should see something like this :
+![shift_clicked_names](https://i.imgur.com/cJzS7b8.jpg)
+
+### 10. 
+Open <hyperlink deleted on purpose>. You should see a google sheet file containing some copyright information. On the top of the column, write the name of the species. On the second cell from the top, simply Ctrl+V and they'll have it done for you.
+
+### 11.
+Now repeat the steps on the 9th section, but now with the image urls. (Select the first cell, then the last cell by shift clicking, then Ctrl+C).
+
+### 12. 
+Reopen the insect_dataset folder. Create a folder named "urls". This should look like :
+![woohoo](https://i.imgur.com/EVSreap.jpg)
+
+Now create a txt file inside the url folder. (name it <your_species_name>_url Paste those image urls that you've copied into the file. Make sure that it doesn't contain any blank lines, or it may cause confusions
+If done correctly, yours should look like this :
+
+![yay](https://i.imgur.com/IA2UwED.jpg)
+
+Now you have a txt file containing all the links to the images!
+
+Now, create another folder in your insect_datasets folder. Name it as your name of the species. (**important!**)
+
+You should see something like :
+
+
+![asdf](https://i.imgur.com/79aKA1q.jpg)
+
+### 13.
+Open Python and add new File, **not in the interpreter environment!** (An interpreter works like >>> print("hello world") -> hello world
+Open [this link where we'll get the code](https://github.com/jaemin-capslock/Betastop/blob/master/Image_Preprocess/image_auto_efficient_downloader.py).
+Copy and paste the code to your python file.
+
+### 14.
+Locate the line where it's written 
+``` python
+f = open(r"E:\insect_dataset\urls\vespa_mandarinia_url.txt", 'r')
+```
+This should be on the eigth line of the code, but double check it just in case. This keyword *open* simply opens a file. It takes two parameters:
+1. directory address to the file. 
+2. Reading mode or writing mode?
+
+This case, the directory address is written as above, and since we're not going to edit (i.e. write) the file itself, we'll open it on read mode ('r').
+Change this directory address to the address of your url file that you've previously created. (For example, if it's created at D drive, it should be something like r"D:\insect_dataset\url\golden_retriever_url.txt". **Do not omit the** .txt **part**.)
+
+Do you see the os.mkdir part above? this mkdir (shortened from of *makedirectory*) creates a folder for you. Edit the directory written inside the os.mkdir method accordingly to the name AND the location of the folder that you wish to create. **REMINDER : THE NAME OF THIS FOLDER SHOULD EQUAL TO THE NAME OF THE SPEICES**
+
+Now scroll down. Again locate the line where it's written
+``` python
+directory = r"E:\insect_dataset\vespa_mandarinia\hornet"
+```
+
+Wait! We haven't created nor specified the name of the images as well as the image types. This code will automatically take care of that for you, (smirk) so don't worry about that. The "hornet" part would be the name of the images that is going to be downloaded.
+Likewise, change this like to the directory address that you wish the images to be downloaded. 
+
+### 15. 
+Run the program. If done correctly, you should see something like :
+![ahhh](https://i.imgur.com/pBIlgqX.jpg)
+
+Now open the folder that you've written for the directory. The images are being automatically downloaded! Pretty fast, isn't it? Quite satisfying to see.
+If your program is done, your Python shell would return "Process finished with exit code 0".
+
+### 16. **This step is optional**.
+Let's check if the images that have been downloaded are equal in numbers compared the the total numbers of the urls.
+
+``` python
+import os
+f = open(r"E:/insect_dataset/urls/vespa_mandarinia_url.txt", 'r')
+new_data_list = []
+ROOT_DIR = ## simply copy the address of the folder where the images are stored. DO NOT INCLUDE THE NAME OF THE IMAGE FILE ITSELF.
+for line in f:
+    x = line[:line.find("\n")]
+    new_data_list.append(x)
+total_num_of_urls = len(new_data_list)
+image_list = []
+for i in os.listdir(ROOT_DIR + r"/") : 
+    image = ROOT_DIR + r"/" + i
+    if os.path.getsize(image) > 0:
+        image_list.append(i)
+print(len(new_data_list))
+print(len(image_list))
+```
+
+
+- [x] Run my Python program that downloads such images *automatically* (ooh) into your folder.
+
+### 17.
+
+Let's start some sorting. 
+Create a new Python file. Copy & Paste the code from [this link](https://github.com/jaemin-capslock/Betastop/blob/master/Image_Preprocess/new_image_directory_sort.py).
+
+### 18.
+There are couple of things that you have to do :
+* You'll see the line where the variable named "core" is. Assign this a new directory address, the insect_dataset directory itself.
+* Make sure that you have no other folders in this insect_dataset folder, other than "urls" and "(name of the species)".
+* This code is pretty long. There might be some errors or bugs; try to solve them for yourself. Otherwise, just call me lol
+
+### 19.
+Check the folders.
+
+
+If you've done everything correctly, your folder should have a structure of :
+
+![asdfaasdfasdfdfasdfasd](https://i.imgur.com/lXm3jrX.jpg)
+
+Congrats! 
